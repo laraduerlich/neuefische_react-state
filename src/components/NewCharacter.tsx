@@ -1,24 +1,26 @@
-import {useState} from "react";
+import {FormEvent, useState} from "react";
 import {Character} from "../types/RickAndMortyCharacter.ts";
-import {characters} from "../Characters.ts";
-import {addCharacter} from "../page/GalleryPage.tsx";
+import {addCharacter} from "./CharacterGallery.tsx";
 
 export default function NewCharacter() {
 
     const [name, setName] = useState("")
     const [species, setSpecies] = useState("")
     const [status, setStatus] = useState("")
+    const [id, setId] = useState(21)
 
-    function onSubmit() {
+    function onSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
         let newCharacter: Character = {
-            id: 21,
+            id: id,
             name: name,
             species: species,
             status: status,
             image: "https://www.contronix.com/files/img/mitarbeiter/foto-folgt.png"
         }
         addCharacter(newCharacter)
-        console.log(characters)
+        console.log(newCharacter)
+        setId(id+1)
         setName("")
         setSpecies("")
         setStatus("")
