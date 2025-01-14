@@ -1,23 +1,30 @@
 import CharacterCard from "../components/CharacterCard.tsx";
-import {characters} from "../Characters.ts";
 import {Character} from "../types/RickAndMortyCharacter.ts";
 import {useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 
 export default function CharacterPage() {
     const params = useParams();
-    if(params.id === undefined) {
-        return <p>"Invalid ID parameter. Please provide a valid number." </p>
-    }
-    const filteredCharacter: Character | undefined = characters.find(
-        (char: Character) => char.id === parseInt(params.id!))
+    const [data, setData] = useState()
 
-    if (filteredCharacter === undefined) {
-        return <p>"No character found with the provided ID." </p>
+    function fetchData() {
+        axios.get("https://rickandmortyapi.com/api/character/" + params.id)
+            .then((response) => {setData(response.data)})
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    if (!data) {
+        return <div>Character not found!</div>
+    }
+
     return (
         <>
-            <CharacterCard character={filteredCharacter} />
+            <CharacterCard character={data as Character} />
         </>
     )
 }
